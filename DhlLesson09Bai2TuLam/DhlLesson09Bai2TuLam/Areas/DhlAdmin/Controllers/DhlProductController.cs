@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DhlLesson09Bai2TuLam.Models;
+using DhlLesson09Bai2TuLam.Areas.DhlAdmin.Models;
 
-namespace DhlLesson09Bai2TuLam.Controllers
+namespace DhlLesson09Bai2TuLam.Areas.DhlAdmin.Controllers
 {
+    [Area("DhlAdmin")]
     public class DhlProductController : Controller
     {
         private readonly DhlAppDbContext _context;
@@ -28,18 +29,10 @@ namespace DhlLesson09Bai2TuLam.Controllers
         // GET: DhlProduct/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var dhlProduct = await _context.DhlProducts
-                .Include(d => d.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dhlProduct == null)
-            {
-                return NotFound();
-            }
+            var dhlProduct = await _context.DhlProducts.Include(d => d.Category).FirstOrDefaultAsync(m => m.Id == id);
+            if (dhlProduct == null) return NotFound();
 
             return View(dhlProduct);
         }
@@ -52,16 +45,12 @@ namespace DhlLesson09Bai2TuLam.Controllers
         }
 
         // POST: DhlProduct/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Price,salePrice,Status,CategoryId,CreatedDate,Image,Description")] DhlProduct dhlProduct)
         {
             if (_context.DhlProducts.Any(p => p.Name == dhlProduct.Name))
-            {
                 ModelState.AddModelError("Name", "Tên sản phẩm đã tồn tại (ràng buộc không trùng)!");
-            }
 
             if (ModelState.IsValid)
             {
@@ -76,36 +65,23 @@ namespace DhlLesson09Bai2TuLam.Controllers
         // GET: DhlProduct/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var dhlProduct = await _context.DhlProducts.FindAsync(id);
-            if (dhlProduct == null)
-            {
-                return NotFound();
-            }
+            if (dhlProduct == null) return NotFound();
             ViewData["CategoryId"] = new SelectList(_context.DhlCategories, "Id", "Name", dhlProduct.CategoryId);
             return View(dhlProduct);
         }
 
         // POST: DhlProduct/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,salePrice,Status,CategoryId,CreatedDate,Image,Description")] DhlProduct dhlProduct)
         {
-            if (id != dhlProduct.Id)
-            {
-                return NotFound();
-            }
+            if (id != dhlProduct.Id) return NotFound();
 
             if (_context.DhlProducts.Any(p => p.Name == dhlProduct.Name && p.Id != id))
-            {
                 ModelState.AddModelError("Name", "Tên sản phẩm đã tồn tại (ràng buộc không trùng)!");
-            }
 
             if (ModelState.IsValid)
             {
@@ -116,14 +92,8 @@ namespace DhlLesson09Bai2TuLam.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DhlProductExists(dhlProduct.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!DhlProductExists(dhlProduct.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -134,18 +104,10 @@ namespace DhlLesson09Bai2TuLam.Controllers
         // GET: DhlProduct/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var dhlProduct = await _context.DhlProducts
-                .Include(d => d.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dhlProduct == null)
-            {
-                return NotFound();
-            }
+            var dhlProduct = await _context.DhlProducts.Include(d => d.Category).FirstOrDefaultAsync(m => m.Id == id);
+            if (dhlProduct == null) return NotFound();
 
             return View(dhlProduct);
         }
@@ -156,18 +118,12 @@ namespace DhlLesson09Bai2TuLam.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var dhlProduct = await _context.DhlProducts.FindAsync(id);
-            if (dhlProduct != null)
-            {
-                _context.DhlProducts.Remove(dhlProduct);
-            }
+            if (dhlProduct != null) _context.DhlProducts.Remove(dhlProduct);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DhlProductExists(int id)
-        {
-            return _context.DhlProducts.Any(e => e.Id == id);
-        }
+        private bool DhlProductExists(int id) => _context.DhlProducts.Any(e => e.Id == id);
     }
 }

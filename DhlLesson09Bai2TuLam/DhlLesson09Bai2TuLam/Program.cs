@@ -1,4 +1,4 @@
-using DhlLesson09Bai2TuLam.Models;
+using DhlLesson09Bai2TuLam.Areas.DhlAdmin.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +41,10 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=DhlHome}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

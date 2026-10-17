@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace DhlLesson09Bai2TuLam.Models
+namespace DhlLesson09Bai2TuLam.Areas.DhlAdmin.Models
 {
     public class DhlAppDbContext : DbContext
     {

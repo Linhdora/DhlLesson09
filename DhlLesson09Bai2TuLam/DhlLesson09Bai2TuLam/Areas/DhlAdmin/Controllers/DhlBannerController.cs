@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DhlLesson09Bai2TuLam.Models;
+using DhlLesson09Bai2TuLam.Areas.DhlAdmin.Models;
 
-namespace DhlLesson09Bai2TuLam.Controllers
+namespace DhlLesson09Bai2TuLam.Areas.DhlAdmin.Controllers
 {
+    [Area("DhlAdmin")]
     public class DhlBannerController : Controller
     {
         private readonly DhlAppDbContext _context;
@@ -27,17 +28,10 @@ namespace DhlLesson09Bai2TuLam.Controllers
         // GET: DhlBanner/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var dhlBanner = await _context.DhlBanners
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dhlBanner == null)
-            {
-                return NotFound();
-            }
+            var dhlBanner = await _context.DhlBanners.FirstOrDefaultAsync(m => m.Id == id);
+            if (dhlBanner == null) return NotFound();
 
             return View(dhlBanner);
         }
@@ -49,16 +43,12 @@ namespace DhlLesson09Bai2TuLam.Controllers
         }
 
         // POST: DhlBanner/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Status,Prioty,Image,Description")] DhlBanner dhlBanner)
         {
             if (_context.DhlBanners.Any(b => b.Name == dhlBanner.Name))
-            {
                 ModelState.AddModelError("Name", "Tên banner đã tồn tại (ràng buộc không trùng)!");
-            }
 
             if (ModelState.IsValid)
             {
@@ -72,35 +62,22 @@ namespace DhlLesson09Bai2TuLam.Controllers
         // GET: DhlBanner/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var dhlBanner = await _context.DhlBanners.FindAsync(id);
-            if (dhlBanner == null)
-            {
-                return NotFound();
-            }
+            if (dhlBanner == null) return NotFound();
             return View(dhlBanner);
         }
 
         // POST: DhlBanner/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Status,Prioty,Image,Description")] DhlBanner dhlBanner)
         {
-            if (id != dhlBanner.Id)
-            {
-                return NotFound();
-            }
+            if (id != dhlBanner.Id) return NotFound();
 
             if (_context.DhlBanners.Any(b => b.Name == dhlBanner.Name && b.Id != id))
-            {
                 ModelState.AddModelError("Name", "Tên banner đã tồn tại (ràng buộc không trùng)!");
-            }
 
             if (ModelState.IsValid)
             {
@@ -111,14 +88,8 @@ namespace DhlLesson09Bai2TuLam.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DhlBannerExists(dhlBanner.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!DhlBannerExists(dhlBanner.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -128,17 +99,10 @@ namespace DhlLesson09Bai2TuLam.Controllers
         // GET: DhlBanner/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var dhlBanner = await _context.DhlBanners
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dhlBanner == null)
-            {
-                return NotFound();
-            }
+            var dhlBanner = await _context.DhlBanners.FirstOrDefaultAsync(m => m.Id == id);
+            if (dhlBanner == null) return NotFound();
 
             return View(dhlBanner);
         }
@@ -149,18 +113,12 @@ namespace DhlLesson09Bai2TuLam.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var dhlBanner = await _context.DhlBanners.FindAsync(id);
-            if (dhlBanner != null)
-            {
-                _context.DhlBanners.Remove(dhlBanner);
-            }
+            if (dhlBanner != null) _context.DhlBanners.Remove(dhlBanner);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DhlBannerExists(int id)
-        {
-            return _context.DhlBanners.Any(e => e.Id == id);
-        }
+        private bool DhlBannerExists(int id) => _context.DhlBanners.Any(e => e.Id == id);
     }
 }

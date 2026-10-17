@@ -1,6 +1,6 @@
-namespace DhlLesson09Bai2TuLam.Models
+namespace DhlLesson09Bai2TuLam.Areas.DhlAdmin.Models
 {
-    public class ErrorViewModel
+    public class DhlErrorViewModel
     {
         public string? RequestId { get; set; }
 

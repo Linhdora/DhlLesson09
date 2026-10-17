@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DhlLesson09Bai2TuLam.Models
+namespace DhlLesson09Bai2TuLam.Areas.DhlAdmin.Models
 {
     [Table("PRODUCT")]
     public class DhlProduct
